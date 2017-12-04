@@ -26,7 +26,10 @@ class Quote(Plugin):
 
     def run(self, msg, parser, args):
         if args.quote is None:
-            self._bot.write(random.choice(self.quotes[args.author]))
+            if args.author not in self.quotes or len(self.quotes[args.author]) < 1:
+                self._bot.write("We don't have any quote for %s yet, feel free to add some." % args.author)
+            else:
+                self._bot.write(random.choice(self.quotes[args.author]))
         else:
             if args.author not in self.quotes:
                 self.quotes[args.author] = []

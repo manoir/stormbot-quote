@@ -6,6 +6,9 @@ This is a Stormbot_ plugin that store your best quote::
     <master>   | stormbot: quote master "Je crois que je suis amoureux de stormbot"
     <stormbot> | Your words are now engraved in the stones
 
+    <master>   | stormbot: quote master
+    <stormbot> | Je crois que je suis amoureux de stormbot
+
 .. _Stormbot: https://pypi.org/project/stormbot
 
 Install
