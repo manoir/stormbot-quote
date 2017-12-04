@@ -35,3 +35,7 @@ class Quote(Plugin):
                 self.quotes[args.author] = []
             self.quotes[args.author].append(args.quote)
             self._bot.write("Your words are now engraved in the stones")
+
+if __name__ == "__main__":
+    from stormbot.bot import main
+    main(Quote)
