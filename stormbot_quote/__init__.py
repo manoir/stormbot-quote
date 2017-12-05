@@ -20,21 +20,33 @@ class Quote(Plugin):
 
     def cmdparser(self, parser):
         subparser = parser.add_parser('quote', bot=self._bot)
-        subparser.add_argument("author", help="Quote author")
+        subparser.add_argument("--all", action="store_true", help="Show all quotes")
+        subparser.add_argument("author", nargs='?', help="Quote author")
         subparser.add_argument("quote", nargs='?', help="Quote")
         subparser.set_defaults(command=self.run)
 
+    def store(self, author, quote):
+        if author not in self.quotes:
+            self.quotes[author] = []
+        self.quotes[author].append(quote)
+        self._bot.write("Your words are now engraved in the stones")
+
+    def get(self, args):
+        if len(self.quotes) == 0:
+            self._bot.write("We don't have any quote yet, feel free to add some.")
+            return
+
+        author = args.author if args.author is not None else random.choice(list(self.quotes.keys()))
+        if author not in self.quotes or len(self.quotes[author]) < 1:
+            self._bot.write("We don't have any quote for %s yet, feel free to add some." % author)
+        else:
+            self._bot.write("{} \"{}\"".format(author, random.choice(self.quotes[author])))
+
     def run(self, msg, parser, args):
         if args.quote is None:
-            if args.author not in self.quotes or len(self.quotes[args.author]) < 1:
-                self._bot.write("We don't have any quote for %s yet, feel free to add some." % args.author)
-            else:
-                self._bot.write(random.choice(self.quotes[args.author]))
+            self.get(args)
         else:
-            if args.author not in self.quotes:
-                self.quotes[args.author] = []
-            self.quotes[args.author].append(args.quote)
-            self._bot.write("Your words are now engraved in the stones")
+            self.store(args.author, args.quote)
 
 if __name__ == "__main__":
     from stormbot.bot import main
