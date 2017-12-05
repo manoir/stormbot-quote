@@ -36,11 +36,23 @@ class Quote(Plugin):
             self._bot.write("We don't have any quote yet, feel free to add some.")
             return
 
+        if args.all:
+            self.get_all(args)
+        else:
+            self.get_one(args)
+
+    def get_one(self, args):
         author = args.author if args.author is not None else random.choice(list(self.quotes.keys()))
         if author not in self.quotes or len(self.quotes[author]) < 1:
             self._bot.write("We don't have any quote for %s yet, feel free to add some." % author)
         else:
             self._bot.write("{} \"{}\"".format(author, random.choice(self.quotes[author])))
+
+    def get_all(self, args):
+        authors = [args.author] if args.author is not None else list(self.quotes.keys())
+        for author in authors:
+            for quote in self.quotes[author]:
+                self._bot.write("{} \"{}\"".format(author, random.choice(self.quotes[author])))
 
     def run(self, msg, parser, args):
         if args.quote is None:
