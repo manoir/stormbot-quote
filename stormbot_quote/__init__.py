@@ -52,7 +52,7 @@ class Quote(Plugin):
         authors = [args.author] if args.author is not None else list(self.quotes.keys())
         for author in authors:
             for quote in self.quotes[author]:
-                self._bot.write("{} \"{}\"".format(author, random.choice(self.quotes[author])))
+                self._bot.write("{} \"{}\"".format(author, quote))
 
     def run(self, msg, parser, args):
         if args.quote is None:
