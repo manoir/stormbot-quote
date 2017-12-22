@@ -1,5 +1,5 @@
 Stormbot quote plugin
-=======================
+=====================
 
 This is a Stormbot_ plugin that store your best quote::
 
