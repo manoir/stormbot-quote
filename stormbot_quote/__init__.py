@@ -21,6 +21,8 @@ class Quote(Plugin):
     def cmdparser(self, parser):
         subparser = parser.add_parser('quote', bot=self._bot)
         subparser.add_argument("--all", action="store_true", help="Show all quotes")
+        if 'stormbot_say' in sys.modules:
+            subparser.add_argument("--say", dest="say", action="store_true", help="Say the quote")
         subparser.add_argument("author", nargs='?', help="Quote author")
         subparser.add_argument("quote", nargs='?', help="Quote")
         subparser.set_defaults(command=self.run)
@@ -34,29 +36,36 @@ class Quote(Plugin):
     def get(self, args):
         if len(self.quotes) == 0:
             self._bot.write("We don't have any quote yet, feel free to add some.")
-            return
+            return None
 
         if args.all:
-            self.get_all(args)
+            return self.get_all(args)
         else:
-            self.get_one(args)
+            return self.get_one(args)
 
     def get_one(self, args):
         author = args.author if args.author is not None else random.choice(list(self.quotes.keys()))
         if author not in self.quotes or len(self.quotes[author]) < 1:
             self._bot.write("We don't have any quote for %s yet, feel free to add some." % author)
         else:
-            self._bot.write("{} \"{}\"".format(author, random.choice(self.quotes[author])))
+            quote = random.choice(self.quotes[author])
+            self._bot.write("{} \"{}\"".format(author, quote))
+            return quote
 
     def get_all(self, args):
         authors = [args.author] if args.author is not None else list(self.quotes.keys())
         for author in authors:
             for quote in self.quotes[author]:
                 self._bot.write("{} \"{}\"".format(author, quote))
+        return None
 
     def run(self, msg, parser, args):
         if args.quote is None:
-            self.get(args)
+            quote = self.get(args)
+            if quote is not None and getattr(args, 'say', False):
+                say_args = ["say", quote]
+                say_args = parser.parse_args(say_args)
+                say_args.command(msg, parser, say_args)
         else:
             self.store(args.author, args.quote)
 
