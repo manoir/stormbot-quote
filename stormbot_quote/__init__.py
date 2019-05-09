@@ -59,7 +59,7 @@ class Quote(Plugin):
                 self._bot.write("{} \"{}\"".format(author, quote))
         return None
 
-    def run(self, msg, parser, args):
+    def run(self, msg, parser, args, peer):
         if args.quote is None:
             quote = self.get(args)
             if quote is not None and getattr(args, 'say', False):
