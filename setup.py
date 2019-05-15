@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='stormbot-quote',
-      version='1.4.0',
+      version='1.7.dev2',
       description='store best quote easily from your Stormbot',
       long_description=long_description,
       author='Paul Fariello',
