@@ -1,6 +1,7 @@
 """Quote for stormbot"""
 import sys
 import random
+import shlex
 import argparse
 
 from stormbot.bot import Plugin
@@ -63,6 +64,7 @@ class Quote(Plugin):
         if args.quote is None:
             quote = self.get(args)
             if quote is not None and getattr(args, 'say', False):
+                msg['body'] = f"{self._bot.nick}: say {shlex.quote(quote)}"
                 say_args = ["say", quote]
                 say_args = parser.parse_args(say_args)
                 say_args.command(msg, parser, say_args, peer)
