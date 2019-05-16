@@ -65,7 +65,7 @@ class Quote(Plugin):
             if quote is not None and getattr(args, 'say', False):
                 say_args = ["say", quote]
                 say_args = parser.parse_args(say_args)
-                say_args.command(msg, parser, say_args)
+                say_args.command(msg, parser, say_args, peer)
         else:
             self.store(args.author, args.quote)
 
