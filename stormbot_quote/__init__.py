@@ -17,7 +17,7 @@ class Quote(Plugin):
 
     @classmethod
     def argparser(cls, parser):
-        parser.add_argument("--quote-cache", type=str, default="/var/cache/stormbot/quote.p", help="Cache file (default: %(default)s)")
+        parser.add_argument("--quote-cache", type=str, default="/var/cache/stormbot/quote.json", help="Cache file (default: %(default)s)")
 
     def cmdparser(self, parser):
         subparser = parser.add_parser('quote', bot=self._bot)
@@ -60,7 +60,7 @@ class Quote(Plugin):
                 self._bot.write("{} \"{}\"".format(author, quote))
         return None
 
-    def run(self, msg, parser, args, peer):
+    async def run(self, msg, parser, args, peer):
         if args.quote is None:
             quote = self.get(args)
             if quote is not None and getattr(args, 'say', False):
