@@ -1,6 +1,7 @@
 """Quote for stormbot"""
 import sys
 import random
+import shlex
 import argparse
 
 from stormbot.bot import Plugin
@@ -16,7 +17,7 @@ class Quote(Plugin):
 
     @classmethod
     def argparser(cls, parser):
-        parser.add_argument("--quote-cache", type=str, default="/var/cache/stormbot/quote.p", help="Cache file (default: %(default)s)")
+        parser.add_argument("--quote-cache", type=str, default="/var/cache/stormbot/quote.json", help="Cache file (default: %(default)s)")
 
     def cmdparser(self, parser):
         subparser = parser.add_parser('quote', bot=self._bot)
@@ -59,13 +60,14 @@ class Quote(Plugin):
                 self._bot.write("{} \"{}\"".format(author, quote))
         return None
 
-    def run(self, msg, parser, args):
+    async def run(self, msg, parser, args, peer):
         if args.quote is None:
             quote = self.get(args)
             if quote is not None and getattr(args, 'say', False):
+                msg['body'] = f"{self._bot.nick}: say {shlex.quote(quote)}"
                 say_args = ["say", quote]
                 say_args = parser.parse_args(say_args)
-                say_args.command(msg, parser, say_args)
+                say_args.command(msg, parser, say_args, peer)
         else:
             self.store(args.author, args.quote)
 
